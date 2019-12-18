@@ -110,12 +110,14 @@
 
 
 \include{inc/introduction} % includes latex files from the same directory
+\include{inc/literaturereview}
+\include{inc/implementation}
+\iffalse
 \include{inc/packages} % could be called Methodology or methods or any filename 
 \include{inc/structure} % could be results
-\include{inc/implementation}
 \include{inc/discussion}
 \include{inc/conclusion}
-
+\fi
 \ifthenelse{\boolean{HarvardCitations}}{%
 	\bibliographystyle{agsm} % used for Harvard style references. Names - Humanities & Interaction Design
 }{%
@@ -126,6 +128,5 @@
 
 \appendix
 \include{inc/rawdata}
-%\include{inc/timetable}
 
 \end{document}

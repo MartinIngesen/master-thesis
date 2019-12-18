@@ -1,26 +1,123 @@
 \chapter{Introduction}
 \label{chap:introduction}
-\q{What is the purpose of this document?}
-The purpose of the current document is to provide an example of using the thesis template and a description on how to use \LaTeX. There are instructions that relate specifically to the template, and some which are generally useful for \LaTeX. 
 
-\q{Where is the structure defined } 
-The detailed typographical rules have been implemented in the
-\texttt{ntnuthesis} \LaTeX\ document class, in the file 
+\iffalse
+Scrutiny of the introduction - http://sepwww.stanford.edu/sep/prof/Intro.html
+\fi
 
-This was updated by Simon McCallum.
-The package has changed names and version number it is now called
-\texttt{ntnuthesis}
-v\ntnuthesisversion\ as of \ntnuthesisdate.
+\iffalse
+The review
 
-\q{what is a thesis about}
-For many of you, this Master's thesis will be the most advanced academic document you ever write.  It needs to demonstrate both academic ability and clear thinking. You Master's should show that you are ready to lead other people, reflect more deeply, and have a professional attitude to your work and environment. 
+Pick out about 3-10 papers providing a background to your research and say something about each of them. You could paraphrase a sentence or two from each abstract. The review is not intended to be a historical review going back to Newton or Descartes. Try to find a few papers by your office mates, your advisor, your predecessors, or other associates. That way you might find somebody to give you helpful criticism!
 
-\q{who cares}
-When writing the thesis it is important to know who you are writing for. The target audience for this document is in layers:
-\begin{enumerate}
-    \item The marking committee
-    \item Your supervisor
-    \item Other students at the same level 
-    \item Professionals \& Academics
-    \item The general public.
-\end{enumerate}
+Anyone can follow these instructions and write a review that looks presentable. Where intelligence and skill are required is in organizing the review so that it leads up to something, namely, to your claim.
+\fi
+
+\iffalse
+The claim
+
+The most important part of the introduction is buried in the middle. It is the claim. The claim is where you claim your work is a worthwhile extension of the review you just wrote. If someone says your writing is "unmotivated," they are not insulting your humanity; it just means they can't find your claim.
+
+In your claim you should use the personal pronoun "I" (or "we" if you aren't the sole author). The word "I" tells people where common knowledge runs out and your ideas begin. If you are writing a doctoral dissertation or an article for a refereed journal, then you should be making a new contribution to existing knowledge. Your paper is not acceptable without an identifiable claim.
+\fi
+
+\iffalse
+I believe that by using a more modern pipeline, programming language and ruleset for event correlation, we can improve not just the correlation throughput (events per second), but also make it simpler for security analysts to create, edit and manage correlation rules.
+\fi
+
+\iffalse
+The agenda
+
+An agenda is found at the end of many introductions. It summarizes what you will show the reader as your paper progresses. Your agenda will be dull if it is merely a recital of the topics you will cover. Your agenda should tell how your paper works to fulfill your claim. In this way your agenda should clarify your claim.
+
+The agenda is not as important as the review and the claim. Keep it short.
+
+Occasionally you will be fortunate enough to be writing about something in which some of your conclusions can be made in simple statements. If so, state them early, right after your agenda. You aren't trying to write a mystery! Many more people will begin reading your paper than will finish reading it. Motivate them to finish! Unfortunately, many technical papers do not lend themselves to early conclusions.
+\fi
+\iffalse
+In this thesis, I will first give some background into the field of correlating event technologies, and give an overview of the state-of-the-art. Then I will explain the methods I have used to measure and analyze our results. After this, I will go into detail on our results, before we then discuss and analyse our results. Finally, I will conclude with some further work to be done.
+
+
+\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+\fi
+
+This field is maturing, as focus has shifted from network monitoring and detection, to a more endpoint-centric approach....
+
+\section{Problem description}
+\label{sec:problemdescription}
+
+We are seeing a movement away from network-based monitoring and detection. There are several reasons for this.
+
+\begin{itemize}
+    \item Increased usage of encrypted communications, as encryption has become standard and more popular than ever before. The continued introduction of other privacy-enhancing technologies like DNS-over-TLS/DNS-over-HTTPS will continue to hinder network-based monitoring and detection from being effective.
+    \item Endpoints are no longer static inside a business network. Employees bring the computers with them outside of the office. Sometimes connected to their business' network via a Virtual Private Network (VPN), sometimes not.
+    \item Network-based detection only give you a glimpse at what happens on the wire. There is not visibility into what is happening on the individual endpoints connected to the network.
+\end{itemize}
+The trend seems to be moving more towards host-based monitoring and detection instead. Traditionally, this has been frowned upon, as CPU-intensive agents would have to be installed on the endpoints. But now we are seeing higher performing agents, as well endpoints with more performant hardware. There are several advantages to moving to endpoint monitoring and detection.
+
+\begin{itemize}
+    \item Host-based detection and response makes it easier to detect anomalies and badness using either 3rd party software, or built-in capabilities of the OS.
+    \item We are not bound to a particular network for protection, so we are still covered monitoring and detection-wise when on the move.
+    \item There is a constant development to allow further insight into what is happening on the endpoint by the OS-vendors.
+\end{itemize}
+
+Current detection analysis is based on aggregating log files into a centralized system known as a System Information and Event Management (SIEM) system. Traditionally in a SIEM, logs are analyzed after-the-fact. This has several drawbacks:
+
+\begin{itemize}
+    \item Security monitoring is reactive.
+    \item Requires actively hunting for bad events.
+\end{itemize}
+
+Another huge problem with pure SIEM-based logging, as companies are collecting more and more logs, actively hunting for badness in those logs are becoming harder and more complex. I single log item from a single source is not enough to properly analyze what has happened in a system. Only by cross-correlating several log lines and log sources are we able fully understand the situation at hand.
+
+An example of this might be that we have a log item X. This means Y and is not a indication of badness in and of itself.
+But if we also see log item Y right before log item X, that could be a indication of attack-pattern X. Which is a known Indicator of Compromise.
+
+
+
+\iffalse
+FROM http://folk.uio.no/josang/papers/MJ2018-ICCSP.pdf
+Current threat detection analysis approaches include aggregation of log files in a centralized system known as security information and event management (SIEM) which performs inspections
+and flags anomalies. A SIEM system collects logs by deploying
+multiple collection agents to gather security-related events from
+end-user devices, servers, intrusion detection systems (IDS), intrusion prevention systems (IPS) and firewalls, network devices such as
+routers and DNS servers and more. In particular, one resource that
+has received considerable attention for endpoint visibility has been
+Sysmon; a Windows system service and device driver that monitors
+and logs system activity of Windows workstations. Approaches for
+threat detection using Sysmon have been proposed mainly focusing
+on search engines (NoSQL database systems) or graph databases.
+\fi
+
+\section{Justification, motivation and benefits}
+\label{sec:justificationmotivationandbenefits}
+...
+There are several benefits of this approach. We are using more modern, industry-standard technology which improves scalability, availability and performance.
+
+\section{Research questions}
+\label{sec:researchquestions}
+
+\begin{itemize}
+    \item Can we make event log analysis and correlation faster using a compiled programming language (Go) rather than a dynamic, interpreted language like Perl.
+    \item Can we make event log correlation simpler for the analyst by utilizing a common alert format for writing and sharing rules, instead of the heavily regular expression-based apporach of SEC?
+    \item Can we further improve the distributed nature of log ingestion and processing by using queuing technologies and a shared in-memory cache for context-information between the event analyzers.
+    \item Does correlating events reduce the number of false positives, and therefore avoid "alert fatigue"?
+\end{itemize}
+
+\section{Planned contributions}
+\label{sec:plannedcontributions}
+
+This thesis will:
+
+\begin{itemize}
+    \item Implement and detail a system for correlating Windows Event Logs in near real time.
+    \item Analyze benefits and drawbacks of using our system versus other tools.
+    \item Show how the system performs on real world data, with a focus on measures to reduce the number of false positives.
+    \item Contribute rules for common attack techniques back to the community, that require correlation to avoid a high false-positive rate.
+\end{itemize}
+
+
+\section{Thesis Outline}
+\label{sec:thesisoutline}
+
+First, we will....

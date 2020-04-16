@@ -98,9 +98,11 @@ There are several benefits of this approach. We are using more modern, industry-
 \label{sec:researchquestions}
 
 \begin{itemize}
-    \item Can we make event log analysis and correlation faster using a compiled programming language (Go) rather than a dynamic, interpreted language like Perl.
-    \item Can we make event log correlation simpler for the analyst by utilizing a common alert format for writing and sharing rules, instead of the heavily regular expression-based apporach of SEC?
-    \item Can we further improve the distributed nature of log ingestion and processing by using queuing technologies and a shared in-memory cache for context-information between the event analyzers.
+\item How can we improve event correlation/the SEC algorithm...? Hvordan kan vi forbedre event log analyse?
+Implementerer en mer effektiv versjon.
+    \item How can we make event log analysis and correlation faster using a compiled programming language (Go) rather than a dynamic, interpreted language like Perl.
+    \item How can we make event log correlation simpler for the analyst by utilizing a common alert format for writing and sharing rules, instead of the heavily regular expression-based apporach of SEC?
+    \item How can we further improve the distributed nature of log ingestion and processing by using queuing technologies and a shared in-memory cache for context-information between the event analyzers.
     \item Does correlating events reduce the number of false positives, and therefore avoid "alert fatigue"?
 \end{itemize}
 
@@ -110,7 +112,7 @@ There are several benefits of this approach. We are using more modern, industry-
 This thesis will:
 
 \begin{itemize}
-    \item Implement and detail a system for correlating Windows Event Logs in near real time.
+    \item Implement and detail a system for correlating Windows Event Logs in near real time. Using Go.
     \item Analyze benefits and drawbacks of using our system versus other tools.
     \item Show how the system performs on real world data, with a focus on measures to reduce the number of false positives.
     \item Contribute rules for common attack techniques back to the community, that require correlation to avoid a high false-positive rate.

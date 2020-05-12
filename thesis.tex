@@ -17,8 +17,13 @@
 \usepackage{graphicx}
 \usepackage{hyperref}   % For cross references in pdf
 
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric,arrows}
+
 \usepackage{pgfplots}
 \pgfplotsset{width=\hsize,compat=1.15}
+
+\usepackage{multicol}
 
 % For smart references 
 %    use \cref{label} and Caption and Number will be added automatically
@@ -74,6 +79,11 @@
 \newcommand{\n}[1]{{\color{blue}#1}} % other comment
 %\renewcommand{\n}[1]{} %remove starting % to remove notes
 
+
+\newcommand{\nikolai}[1]{{\color{orange}#1}} % other comment
+\newcommand{\anders}[1]{{\color{purple}#1}} % other comment
+%\renewcommand{\n}[1]{} %remove starting % to remove notes
+
 \newcommand{\dn}[1]{} % add the d to a note to say that you have finished with it.
 
 
@@ -97,9 +107,9 @@
 
 \begin{document}
 
-\input{inc/DaimData} % this is the file which contains all the details about your thesis
+\input{sub/DAIMData} % this is the file which contains all the details about your thesis
 \makefrontpages % make the frontpages
-\input{inc/mastersIntro}
+\input{sub/intro}
 
 \tableofcontents
 
@@ -110,11 +120,23 @@
 \listoftables
 \lstlistoflistings
 
+% ======== INSERT STUFF HERE vvv ========
+\include{sub/introduction}
+\include{sub/relatedwork}
+\include{sub/background}
+\include{sub/methodology}
+\include{sub/experiment}
+\include{sub/resultsanalysis}
+\include{sub/discussion}
+\include{sub/conclusion}
+% ======== INSERT STUFF HERE ^^^ ========
+
+\iffalse
 \include{inc/02042020}
 \include{inc/introduction} % includes latex files from the same directory
 \include{inc/literaturereview}
 \include{inc/implementation}
-\iffalse
+
 \include{inc/packages} % could be called Methodology or methods or any filename 
 \include{inc/structure} % could be results
 \include{inc/discussion}
@@ -126,9 +148,12 @@
 	\bibliographystyle{ntnuthesis/ntnuthesis} %used for Vancover style references. Numbers - Computer Science & Physics
 }
 
-\bibliography{MastersExample}
+\bibliography{thesis}
 
 \appendix
+
+\iffalse
 \include{inc/rawdata}
+\fi
 
 \end{document}

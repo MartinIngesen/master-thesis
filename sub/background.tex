@@ -1,0 +1,338 @@
+\chapter{Background}
+\label{chap:background}
+
+\section{Event correlation}
+
+\subsection{Finite State Machine Based}
+\subsection{Rule Based Event Correlation}
+\subsection{Case Based Reasoning}
+
+In case based reasoning, a previously experienced problem and its solution is called a case. As explained in \cite{aamodt_1994}, case based reasoning is based on the assumption that we can find a solution for a new problem by finding past cases that are similar, and then reusing the solution to solve the new problem. The reasoning is then further enforced by adding the problem and the solution to the case library for future use. As stated in \cite{slade_1991}, case-based reasoning is similar to how humans approach new problems by assimilating past experiences and adapting them to new situations. The figure \ref{fig:case-based-reasoning-cycle} describe the cycle used in case-based reasoning from an high-level perspective. Under each step in the cycle there are multiple tasks that may be necessary to conduct before continuing on with the cycle. For instance, the "Retrieve" step might need to identify which features of the problem to search the Case Library for.
+\begin{figure}[ht]
+\centering
+%\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=red!30]
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2cm,
+                    thick,main node/.style={circle,draw,font=\sffamily\Large\bfseries},
+                    problemm/.style={circle, text centered, draw=black, fill=red!30},
+                    stepp/.style={rectangle, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=orange!30},
+                    libraryy/.style={rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=green!30}]
+  \node (Problem) [problemm] {Problem};
+  \node (Retrieve) [stepp, below of=Problem] {Retrieve};
+  \node (Reuse) [stepp, below of=Retrieve] {Reuse};
+  \node (Revise) [stepp, below of=Reuse] {Revise};
+  \node (Retain) [stepp, right of=Revise, xshift=3cm] {Retain};
+  \node (CaseLibrary) [libraryy, right of=Retrieve, xshift=3cm] {Case Library};
+  
+  \path[every node/.style={font=\sffamily\small}]
+    (Problem)
+        edge node {} (Retrieve)
+    (Retrieve)
+        edge node {} (Reuse)
+    (Reuse)
+        edge node {Copy or Adapt} (Revise)
+    (Revise)
+        edge node {Evaluate} (Retain)
+    (Retain)
+        edge node {} (CaseLibrary)
+    (CaseLibrary)
+        edge node {} (Retrieve)
+    ;
+\end{tikzpicture}
+\caption{Case-based reasoning cycle}
+\label{fig:case-based-reasoning-cycle}
+\end{figure}\\
+A example where this might be useful is in a Security Operations Center (SOC). A SOC receives a high number of alerts that have to be handled by an analyst to analyse and propose a response to the alert. The response can vary from simply suppressing the alert as a false-positive, sending an e-mail to the client to alert them, or escalating the alarm to the Incident Response team. Case based reasoning can then be applied to new alerts by first retrieving the most similar alerts previously handled. The information stored in the previous case can then be used to handle the analysis or solution to an alert. The analyst will then revise the proposed solution, and retain the parts that might be useful for resolving similar future alerts. This follows the case based reasoning cycle proposed in \cite{aamodt_1994}.
+The retrieval step is difficult because we need to find similar cases that offer solutions that are relevant. Cases may contain attributes that are irrelevant, which might not be clear to the automated retrieval process. \cite{lewis_1993} and \cite{davies_1987} propose creating "determination rules" or "determinators" that are either compound attributes or a pointer to which attributes to look at in the case.
+Additionally, adaptation of the old solutions to the new problem is a difficult task. While manual specification of the solution in the "Revise" step is possible and somewhat required, too much emphasis on manual intervention or adjustments will defeat the purpose of case-based reasoning. This is why according to \cite{leake_1996} many case-based reasoning systems have adapted the cycle from Retrieve-Reuse-Revise-Retain to a much shorter Retrieve-Propose cycle that completely eliminates the adaptation.
+
+In \cite{schwartz_2002}, the authors used the intrusion detection system Snort as a basis for a new case-based reasoning IDS that uses the Snort rule base as a case library. The benefits of this approach is that the Snort rules may be to specific and fail to detect certain kind of intrusions. With the case-based reasoning approach to this problem, the retrieval-step in the cycle will take care of this by finding cases (rules) that are applicable to the network packet even though the vanilla rule would not create an alert on that packet.
+In \cite{Kapetanakis_2014}, the authors argue that with the digital traces left by an attacker, it is possible to build a profile for that attacker which can be used to assist in future attacks to identify which attacker is attacking. In \cite{han_2016} the authors implemented a system called "WHAP" which uses case-based reasoning to compare cyber attacks against websites. WHAP builds on a large database of website defacements, which are custom webpages left on the victim server by the attacker to claim credit for a website hack. The system is then able to take new hacked websites as input, and output similar previous cases where it is likely that the website has been hacked by the same attacker. This can be useful for attribution and forensic investigations.
+
+\subsection{Model Based Reasoning}
+
+The managed system is modeled
+with respect to its event emission behavior (event model). The programmed knowledge somehow
+defines events to be related under some temporal or sequential constraints
+
+\subsection{Codebook Based Event Correlation}
+\label{sub:codebook-based-event-correlation}
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
+                    thick,main node/.style={circle,draw,font=\sffamily\Large\bfseries}]
+  \node[main node] (p1) {$p^1$};
+  \node[main node] (p2) [right of=p1] {$p^2$};
+  \node[main node] (p3) [right of=p2] {$p^3$};
+  \node[main node] (e1) [below left of=p1] {$e^1$};
+  \node[main node] (e2) [right of=e1] {$e^2$};
+  \node[main node] (e3) [right of=e2] {$e^3$};
+  \node[main node] (e4) [right of=e3] {$e^4$};
+
+  \path[every node/.style={font=\sffamily\small}]
+    (p1)
+        edge node {} (e1)
+        edge node {} (e2)
+        edge node {} (e3)
+    (p2)
+        edge node {} (e2)
+        edge node {} (e3)
+        edge node {} (e4)
+    (p3)
+        edge node {} (e1)
+        edge node {} (e2)
+        edge node {} (e4)
+    ;
+\end{tikzpicture}
+\caption{Example causality graph used for codebook based event correlation}
+\label{fig:causality-graph-codebook}
+\end{figure}
+
+In \cite{yemini_1996}, the authors propose that the events caused by problems, can be modelled as seen in figure \ref{fig:causality-graph-codebook} where the directed edges of the graph describe the causality of an event. $p^x$ denotes a problem, and $e^x$ denotes an event. To utilize the codebook, each problem node in the graph is converted into a binary vector can be created to describe its relation to the events on the graph. This is known as a "code". The binary vector contains bits that corresponds to each event in the graph. If a bit is set to a $1$, it indicates that the given problem causes the event that the bit corresponds to. A bit of $0$ indicates that it does not cause the event. These codes then go into the codebook. If we convert the graph in figure \ref{fig:causality-graph-codebook} into a codebook, it will look like table \ref{tab:correlation-matrix}. The graph and codebook needs to be sufficiently large to be able to identify all the problems. If the codebook is too small, it may omit events that are of interest to us. If the codebook is too large, it may contain events that are unnecessarily redundant. One way to approach the problem with codebooks that are too large, is to do what the authors in \cite{yemini_1996} calls "codebook reduction". Codebook reduction is the process of removing events that are "universal" for all problems. In the figure \ref{fig:causality-graph-codebook} and the corresponding table \ref{tab:correlation-matrix} we can see that event $e^2$ is a common event for all the problems. Because of this redundancy, it can be remove to simplify the codebook as show in figure \ref{tab:correlation-matrix-reduced}. Further work has been done to enhance the efficiency of the codebook. \cite{gupta_1999} proposes a two step preprocessing algorithm that ensures mathematical provable codebooks and eliminates events that are unable to distinguish between problems.
+
+When new events occur, the events are converted into a new binary vector. This vector is then compared with the codes in the codebook, and the code that is the most similar is chosen as a means to identify the problem. The similarity could in theory just be a regular comparison to see if the new binary vector exactly matches any of the codes in the codebook, but \cite{yemini_1996} propose to instead use Hamming distance to calculate the closest match. Using Hamming distance has several benefits, first of all it increases the tolerance for noise or lost events, secondly instead of choosing a single best candidate problem, we can defined a radius that will give us a codebook subset containing possible codes within the given Hamming distance radius.
+Because of the novel preprocessing down to binary vectors, codebook-based correlation is faster than other rule-based event correlation techniques. One of the more time-consuming tasks with regard to codebook-based event correlation is the creation of the problems and their mapping to symptom events. The most likely way to produce these codebooks will be as an expert system where a person with deep knowledge about the events in the system are able to map symptoms to problems. In addition, the process of selecting which events might be symptoms of a problem is similar to feature selection in the machine learning landscape. Feature selection is the process of selecting a subset of features that can be used in model construction, which is similar to how the codebook is generated.
+
+One of the biggest limitations regarding codebook based event correlation is that there is no built-in way to handle time. When a problem has been identified based on a number of symptoms, there is no time window applied, and there is no notion of event order. Furthermore the events do not contain any properties, and would require significant extending to take into account e.g. source hostname, username.
+
+\begin{table}[]
+\centering
+\begin{tabular}{l|llll}
+ & $e^1$ & $e^2$ & $e^3$ & $e^4$ \\ \hline
+$p^1$ & 1 & 1 & 1 & 0 \\
+$p^2$ & 0 & 1 & 1 & 1 \\
+$p^3$ & 1 & 1 & 0 & 1
+\end{tabular}
+\caption{Codebook correlation matrix}
+\label{tab:correlation-matrix}
+\end{table}
+
+\begin{table}[]
+\centering
+\begin{tabular}{l|lll}
+ & $e^1$ & $e^3$ & $e^4$ \\ \hline
+$p^1$ & 1 & 1 & 0 \\
+$p^2$ & 0 & 1 & 1 \\
+$p^3$ & 1 & 0 & 1
+\end{tabular}
+\caption{Reduced codebook correlation matrix}
+\label{tab:correlation-matrix-reduced}
+\end{table}
+
+\subsection{Voting approaches}
+\subsection{Explicit Fault-localization}
+\subsection{Dependency Graphs}
+
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
+                    thick,main node/.style={circle,draw,font=\sffamily\Large\bfseries}]
+  \node[main node] (a) {a};
+  \node[main node,fill=blue] (b) [right of=a] {b};
+  \node[main node,fill=blue] (c) [right of=b] {c};
+  \node[main node,fill=blue] (d) [below left of=a] {d};
+  \node[main node] (e) [right of=d] {e};
+  \node[main node] (f) [right of=e] {f};
+  \node[main node] (g) [right of=f] {g};
+  \node[main node] (h) [below left of=d] {h};
+  \node[main node,fill=red] (i) [right of=h] {i};
+  \node[main node] (j) [right of=i] {j};
+  \node[main node] (k) [right of=j] {k};
+  \node[main node] (l) [right of=k] {l};
+
+  \path[every node/.style={font=\sffamily\small}]
+    (a)
+        edge node {} (e)
+    (b)
+        edge node {} (e)
+    (c)
+        edge node {} (f)
+    (d)
+        edge node {} (h)
+        edge node {} (i)
+    (e)
+        edge node {} (j)
+    (f)
+        edge node {} (j)
+        edge node {} (k)
+    (g)
+        edge node {} (k)
+        edge node {} (l)
+    (j)
+        edge node {} (i)
+    ;
+\end{tikzpicture}
+\caption{Example dependency graph}
+\label{fig:dependency-graph}
+\end{figure}
+
+Similar to the dependency graph used in \ref{sub:codebook-based-event-correlation}, \cite{Gruschke_1998} suggests that a dependency graph can contain enough information to be used for event correlation, while also being simple to automatically generate. The dependency graph is a directed graph that maps the relationship managed objects. These objects can be hosts in a network, dependencies in a micro-service architecture, and so forth. \todo{More examples here?}
+In figure \ref{fig:dependency-graph} we have mapped a series of objects as an example. Events are mapped to their corresponding object in the graph (colored in blue, object b, c and d). Then we walk the graph from those objects. As explained in \cite{Gruschke_1998}, when we optimally find one object node that are common for all the given events, we have most likely found the responsible node. In the example this is marked as red, object i.
+\cite{Gruschke_1998} further outlines that the quality of the root-cause detection can be measured by the depth and length we need to walk the graph at. Objects that are further away from the initial object are less likely to be the root cause, and vica versa.
+One of the main drawbacks of dependency graph based correlation is the fact that it does not handle multiple, non-related problems very good. \cite{Gruschke_1998} assumes that only one problem occurs at a time. If multiple problems occur that are not related or affect each other, finding the root-case may prove to be impossible, or select the wrong root-cause object.
+Assumes the events are for a single fault. Meaning it will not be able to handle detecting multiple failing nodes.
+As with the codebook-based event correlation we discussed in \ref{sub:codebook-based-event-correlation}, dependency graphs also lack the notion of time. As well as the fact that the dependency graph is not taking advantage of attributes on the nodes to further enhance the graph.
+
+\subsection{Bayesian Network Based Event Correlation}
+
+
+
+\subsection{Neural Network Approaches}
+\subsection{Etc}
+
+
+
+\section{Rule-based event correlation}
+\label{sec:eventcorrelation}
+\todo{Give an intro into the world of correlating events, why is it so valuable?}
+
+\begin{itemize}
+    \item Reduce alert-fatigue by generating high-fidelity alerts.
+    \item Gather up smaller events that in and of them self are not worthy an alarm.
+\end{itemize}
+
+Rule-based event correlation software is historically known as expert systems. \cite{cronk_1988} defines an expert system as a "problem-solving software that embodies specialized knowledge in a narrow task domain to do work usually performed by a trained, skilled human.".
+
+According to \cite{cronk_1988}, expert systems are organized around three levels; data, control and task knowledge. \todo{See figure 2 in paper. It should be incorporated in some way, as it pretty much defines how we have built MEC}.
+
+Traditionally, creating the rules that goes into a knowledge base is in \cite{cronk_1988} defined as two-fold; first you have the subject-matter expert which has the expertise and knowledge about which events you are interested in creating correlations against, and secondly the knowledge engineer which is familiar with how the expert system works and how the rules has to be written to be understood by the system.
+In more modern settings, usually the subject-matter expert is also able to write rules
+
+
+
+What are some of the drawbacks of rule-based event correlation?
+
+\begin{itemize}
+    \item Doesn't learn or adapt
+    \item Requires the subject-matter expert to define the rules, and the knowledge engineer to implement them
+    \item Time-consuming to write and "push" rules into the system
+    \item Requires testing and monitoring to make sure that:
+    \begin{enumerate}
+        \item the rule triggers on the intended events and
+        \item the rule does not create tons of alerts that will flood the analysts handling the alerts
+    \end{enumerate} 
+    \item Maintenance of the rule repository is time-consuming
+    \item Networks may differ, so it's not given that a rule that fits into one network, can automatically be used in another.
+\end{itemize}
+
+Regardless of all the drawbacks, we see a common trend that rule-based systems are the most common when it comes to network-based monitoring (see Suricata, Snort) as well as for log data in SIEMs like Splunk, ELK, OSSEC and OSSIM.
+
+\section{Windows Event Log}
+
+Windows Event Log is a built-in capability in the Microsoft Windows operating systems. The different event log categories can be configured using Group Policy Objects in an enterprise. The total amount of logs generated on a system is huge, so configuration is necessary to remove noisy or uninteresting events.
+There are events for "everything". \todo{Find some examples here}
+Windows Event Logs are usually sent to a centralized location for storage and analysis, either using the built-in option called Windows Event Log Forwarding or using custom agents like Splunk Universal Forwarder, winlogbeat or nxlog to name a few.
+
+\subsection{Sysmon}
+Sysmon is an extension to the stock Windows Event Log and allows for a more powerful customization of what events go into the event log. Using a kernel driver, Sysmon is able to add support for a wider variety of interesting events. The table \ref{tab:sysmoneventtypes} is a list of each event type that Sysmon can generate.
+
+\begin{table}[ht]
+\begin{tabular}{l|l}
+ID & Description \\ \hline
+1 & Process creation \\
+2 & A process changed a file creation time \\
+3 & Network connection \\
+4 & Sysmon service state changed \\
+5 & Process terminated \\
+6 & Driver loaded \\
+7 & Image loaded \\
+8 & CreateRemoteThread \\
+9 & RawAccessRead \\
+10 & ProcessAccess \\
+11 & FileCreate \\
+12 & RegistryEvent (Object create and delete) \\
+13 & RegistryEvent (Value Set) \\
+14 & RegistryEvent (Key and Value Rename) \\
+15 & FileCreateStreamHash \\
+17 & PipeEvent (Pipe Created) \\
+18 & PipeEvent (Pipe Connected) \\
+19 & WmiEvent (WmiEventFilter activity detected) \\
+20 & WmiEvent (WmiEventConsumer activity detected) \\
+21 & WmiEvent (WmiEventConsumerToFilter activity detected) \\
+22 & DNSEvent (DNS query) \\
+255 & Error
+\end{tabular}
+\caption{List of Sysmon event types}
+\label{tab:sysmoneventtypes}
+\end{table}
+
+\section{MITRE Cyber Analytics Repository}
+"The MITRE Cyber Analytics Repository (CAR) is a knowledge base of analytics developed by MITRE based on the MITRE ATT\&CK adversary model"
+
+One of the CAR analytics is "CAR-2013-04-002: Quick execution of a series of suspicious commands". This analytic is based on the assumption that certain commands are frequently ran by malicious actors on a system, while regular users do not run them. CAR-2013-04-002 outlines several commands of interest:
+\begin{multicols}{2}
+\begin{itemize}
+\item arp.exe
+\item at.exe
+\item attrib.exe
+\item cscript.exe
+\item dsquery.exe
+\item hostname.exe
+\item ipconfig.exe
+\item mimikatz.exe
+\item nbstat.exe
+\item net.exe
+\item netsh.exe
+\item nslookup.exe
+\item ping.exe
+\item quser.exe
+\item qwinsta.exe
+\item reg.exe
+\item runas.exe
+\item sc.exe
+\item schtasks.exe
+\item ssh.exe
+\item systeminfo.exe
+\item taskkill.exe
+\item telnet.exe
+\item tracert.exe
+\item wscript.exe
+\item xcopy.exe
+\end{itemize}
+\end{multicols}
+\url{https://car.mitre.org/analytics/CAR-2013-04-002/}
+
+
+
+\section{Sigma}
+\url{https://github.com/Neo23x0/sigma}
+
+Sigma is an open standard for rules that are used to generically describe searches in log data. It is primarily used as a high-level rule that transcompile into SIEM queries like Splunk, ElasticSearch, QRadar, etc. The rules are written in YAML (Yet Another Markup Language), and are key-value based.
+\\
+The following example Sigma rule is a basic rule that detects running \lstinline{ipconfig}, \lstinline{arp} and \lstinline{echo} within a ten second timeframe, filtered by the \lstinline{MachineName} key in the event: \todo{We should add some examples of what an event actually looks like, to make it more obvious to the reader what we are talking about here}
+
+\begin{lstlisting}[
+    basicstyle=\small
+]
+title: Quick Execution of a Series of Suspicious Commands
+id: 61ab5496-748e-4818-a92f-de78e20fe7aa
+description: Detects multiple suspicious process in a limited timeframe
+status: experimental
+references:
+    - https://car.mitre.org/wiki/CAR-2013-04-002
+author: Martin Ingesen
+modified: 2020/01/01
+tags:
+    - car.2013-04-002
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        CommandLine:
+            - ipconfig
+            - arp
+            - echo
+    timeframe: 10s
+    condition: selection | count() by MachineName > 3
+falsepositives:
+    - False positives depend on scripts and
+    administrative tools used in the monitored environment
+level: low
+\end{lstlisting}
+The format contains some required and some optional fields, and is extensible with our own custom fields.
+
+\includegraphics[scale=0.525]{figures/new-rule-format/Sigma_Schema.png}
+
+Image source: \url{https://github.com/Neo23x0/sigma/wiki/Specification}

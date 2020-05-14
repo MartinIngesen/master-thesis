@@ -17,8 +17,15 @@
 \usepackage{graphicx}
 \usepackage{hyperref}   % For cross references in pdf
 
+\hypersetup{colorlinks=true,     
+		linkcolor=blue,          % color of internal links (change box color with linkbordercolor)
+    citecolor=blue,        % color of links to bibliography
+    filecolor=blue,      % color of file links
+    urlcolor=blue           % color of external links
+		}
+
 \usepackage{tikz}
-\usetikzlibrary{shapes.geometric,arrows}
+\usetikzlibrary{shapes.geometric,arrows,automata}
 
 \usepackage{pgfplots}
 \pgfplotsset{width=\hsize,compat=1.15}
@@ -30,12 +37,7 @@
 \usepackage[capitalise,noabbrev]{cleveref} 
 
 \usepackage{color}              % For colouring text 
-\hypersetup{colorlinks=true,     
-		linkcolor=blue,          % color of internal links (change box color with linkbordercolor)
-    citecolor=blue,        % color of links to bibliography
-    filecolor=blue,      % color of file links
-    urlcolor=blue           % color of external links
-		}
+
 \usepackage{csvsimple}  % for simple table reading and display
 \usepackage{url}
 \usepackage{booktabs}

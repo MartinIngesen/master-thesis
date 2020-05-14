@@ -24,6 +24,7 @@ Historically, there has been concerns with all of these solutions. The different
 For anti-virus to protect its integrity and detect malice it has to run with high privileges on the host. Any vulnerabilities in the AV engine can then have fatal consequences allowing for instance privilege escalation on the host. There has been concerns regarding system instability caused by bugs in the AV engine or slow network connections caused by the AV doing network inspection. These faults are usually patched or corrected quickly by the vendor, but might still be of concern to the system administrators. Event forwarding requires knowledge of what logs to forward and what to filter out. The number of events that are generated per second can vary, and being able to estimate the amount of logs are important so that the central log collection can be scaled appropriately to accommodate the volume of logs that are being ingested and stored.
 In recent years, the technology both for configuring and maintaining software on the hosts and systems for ingesting host data to a central location has done great leaps. Vendors of security products have made their software simpler to configure, usually via a cloud-based console. Storage is in general cheaper, and "Security Information Event Management" (SIEM) software has made it simpler to monitor and analyze large volumes of event and log data.
 
+\phantomsection
 \section{Problem description}
 \label{sec:problemdescription}
 
@@ -35,7 +36,6 @@ being able to write rules that are able to correlate in real time against event 
 
 Current detection analysis is based on aggregating log files into a centralized system known as a System Information and Event Management (SIEM) system. Traditionally in a SIEM, logs are analyzed after-the-fact. This has several drawbacks as this type of security monitoring is reactive and requires actively hunting for bad events in the data using dashboards or search queries that are executed by the analyst.
 Another huge problem with pure SIEM-based logging, as companies are collecting more and more logs, actively hunting for badness in those logs are becoming harder and more complex. I single log item from a single source is not enough to properly analyze what has happened in a system. Only by cross-correlating several log lines and log sources are we able fully understand the situation at hand and create detection that are of high quality.
-
 \section{Justification, motivation and benefits}
 \label{sec:motivation}
 Today, event log correlation is usually done using built-in functionality in a SIEM, or specialized software that processes data.

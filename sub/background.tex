@@ -309,9 +309,69 @@ As with the codebook-based event correlation we discussed in \ref{sub:codebook-b
 
 \subsection{Bayesian Network Based Event Correlation}
 
-"Bayesian networks are one of the most widely used graphical models for representing and reasoning about the probabilistic causal relationships between variables." \cite{Kavousi_2014}
+Bayesian networks are one of the most widely used graphical models for representing and reasoning about the probabilistic causal relationships between variables\cite{Kavousi_2014}. Bayesian networks are usually represented by directed acyclic graphs. Directed acyclic graphs are finite directed graphs that contain no direct cycles. This means that there is no way to start from a given node, and via the directed edges return back to the same node. Each node in the network represents a variable of interest and the edges describe the relations between these variables.
+The Bayesian network is split up into two parts. First there is the graphical model of the network which shows the nodes and the edges that connect them. Secondly, there is the conditional probability tables associated with each node. The table consist of the probabilities that a node is in a given state given the state of its parent nodes.
 
-Both \cite{Kavousi_2014} and \cite{Qin_2004} create "Bayesian attack graphs" (BAG) which are models that use Bayesian networks to depict the security attack scenarios in a system.
+
+
+Both \cite{Kavousi_2014} and \cite{Qin_2004} utilize Bayesian networks to create "Bayesian attack graphs" (BAG) which are models that use Bayesian networks to depict the security attack scenarios in a system.
+
+As a simple experiment using a Bayesian Network for detection, we have the directed acyclic graph as shown in Figure \ref{fig:simple-directed-acyclic-graph}. The nodes are a bit like the ones represented in Codebook-based correlation \ref{sub:codebook-based-event-correlation} where the nodes $B$ and $C$ represent two symptom events that are analyzed by the system, these can be events from an IDS, host machine logs, web logs, et cetera. The node $A$ represent a problem node and is not connected to any specific events. The purpose of this Bayesian network, is to answer the following question: What is the probability that, when we observe the two events $B$ and $C$, we have a problem $A$?
+
+To calculate this, we first need the the conditional probability tables, which are given in Table \ref{tab:probabability-tables}.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=1cm,
+                    thick,main node/.style={circle,draw,font=\sffamily\Large\bfseries}]
+  \node[main node] (a) {$A$};
+  \node[main node] (b) [below of=a,xshift=-2cm] {$B$};
+  \node[main node] (c) [below of=a,xshift=2cm] {$C$};
+
+  \path[every node/.style={font=\sffamily\small}]
+    (a)
+        edge node {} (b)
+        edge node {} (c)
+    ;
+\end{tikzpicture}
+\caption{Simple example directed acyclic graph}
+\label{fig:simple-directed-acyclic-graph}
+\end{figure}
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+$P(A = 0)$ & $P(A = 1)$ \\ \hline
+$0.8$ & $0.2$ \\ \hline
+\end{tabular}
+\begin{tabular}{|l|l|l|}
+\hline
+$A$ & $P(B = 1|A)$ & $P(B = 0|A)$ \\ \hline
+$1$ & $0.9$ & $0.1$ \\ \hline
+$0$ & $0.05$ & $0.95$ \\ \hline
+\end{tabular}
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+$A$ & $P(C = 1|A)$ & $P(C = 0|A)$ \\ \hline
+$1$ & $0.95$ & $0.05$ \\ \hline
+$0$ & $0.05$ & $0.95$ \\ \hline
+\end{tabular}
+\caption{Conditional probability tables}
+\label{tab:probabability-tables}
+\end{table}
+
+We can then calculate the probability that $A$ has occurred, given that we have observed the events $B$ and $C$ by using Bayes' theorem.
+\begin{align*}
+    &P(A=1 | B=1, C=1)\\
+    &=\frac{P(A=1)P(B=1,C=1|A=1)}{P(B=1,C=1)}\\
+    &=\frac{P(A=1)P(B=1,A=1)P(C=1,A=1)}{P(A=1)P(B=1|A=1)P(C=1|A=1)+P(A=0)P(B=1|A=0)P(C=1|A=0)}\\
+    &=\frac{0.2\cdot0.9\cdot0.95}{(0.2\cdot0.9\cdot0.95)+(0.8\cdot0.05\cdot0.05)}\\
+    &\approx 0.9884
+\end{align*}
+In this case, we see that there is approximately a 99\% chance that the problem/alert $A$ has happened, by observing the arrival of the two events $B$ and $C$.
+
 
 \subsection{Neural Network Approaches}
 \subsection{Etc}

@@ -14,10 +14,8 @@ Your rationale for choosing these methods
     \item What is the performance of our proposed method, and how does it compare to other methods?
 \end{enumerate}
 
-\fi
-
 \anders{Vil bare understreke at du kanskje er ute etter en vitenskapelig metode her, ikke å gå inn på hvorfor du valgte Go. Go er implmentasjonen din, mer på begrunnelse i en beskrivelse av valg av verktøy for performance reasons or whatnot. Når jeg leser methodology i en vitenskapelig oppgave/artikkel/avhandling så skal det gå på om du f.eks. utvikler noe nytt, bidrar til en felles forståelse om bedring av et eksisterende miljø eller noe sånt svada.}
-
+\fi
 
 The goal of this thesis is to explore.. if there is any way that we can improve the way real time event correlation is done, and in particular for Windows Event Logs.
 In the chapter \ref{chap:background} we discussed the background and state of the art for doing event correlation.
@@ -104,7 +102,7 @@ The concentrated dataset is used strictly for measuring the performance of the s
 \textbf{Mordor datasets}\\
 The Mordor datasets are not as concentrated and gathered from a test environment using realistic tools, techniques and procedures based on the MITRE ATT\&CK framework.
 
-\section{Datasets used in this thesis}
+\subsection{Datasets used in this thesis}
 \label{sec:datasets-used}
 
 For the experiments conducted in this thesis, Multiple datasets have been chosen:
@@ -129,6 +127,22 @@ Does a compiled programming language give us benefits in terms of performance, c
 
 \todo{Casually mention Go here?}
 
+There are several reasons to use gravitate towards Go as the language of choice.
+\begin{itemize}
+    \item Compiled language offer performance benefits over interpreted languages
+    \item Go routines and channels makes it easy to implement concurrent execution as discussed in Section \ref{sub:concurrent-execution}.
+    \item Cross-platform
+    \item Garbage collection
+    \item Strongly and statically typed
+    \item Race-condition detection
+    \item Built-in profiling tools
+\end{itemize}
+
+\subsection{Concurrent execution}
+\label{sub:concurrent-execution}
+
+As seen with the existing solutions, they are not taking full advantage of the system when only running in a single thread. We believe that by using multi-threading we can increase the throughput of the solution and process events much quicker.
+
 \subsection{Better rules}
 \label{sub:better-rules}
 
@@ -141,12 +155,14 @@ Instead of the time being based on when the event is read, we want to base our c
 
 \subsection{Something something preprocessing of logs}
 
-Mention tokenization here?
+We propose that tokenization is a better option for handling certain types of logs. Move away from regular expressions and over to tokenization instead.
+
+We are talking about tokenization in the lexical form, not data security.
 
 \subsection{Support for multiple log formats}
 \label{sub:multiple-log-formats}
 
-Kinda implemented, but future work... \todo{Do something about this?}
+Currently we are focused on Windows Event Logs, but the solution could be expanded into supporting other log sources without much work. We consider this future work.
 
 \subsection{Output modularity}
 \label{sub:modularity}
@@ -157,6 +173,7 @@ Defining different alert output channels. It would be nice to be able to create 
     \item E-Mail
     \item Instant Messaging platforms like Slack, Teams et cetera.
     \item Ticketing system
+    \item SIEM products like Splunk
 \end{itemize}
 We have chosen not to implement these as we focused primarily on performance measurements, and consider this future work.
 
@@ -169,7 +186,7 @@ We have chosen not to implement these as we focused primarily on performance mea
     \item Scalability - Architecture-wise we want to upscale...
 \end{itemize}
 
-\begin{figure}[h]  %t top, b bottom, p page | you can also use h to try to get the figure to appear at the current location
+\begin{figure}[ht]  %t top, b bottom, p page | you can also use h to try to get the figure to appear at the current location
   \centering
   \includegraphics[width=.85\textwidth]{figures/holmes-architecture}
   \caption[An example figure.]{Minimal architecture. Every single node can be scaled both vertically and horizontally.}
@@ -184,6 +201,11 @@ Interesting future work would be to add horizontal scaling to the proposed solut
 \section{Measuring performance}
 \label{sec:measuring-performance}
 There are multiple factors that affect the performance of event correlators. All these factors lead to multiple ways that we can measure performance. This section tries to outline the most important ones.
+
+\subsection{Hardware utilization}
+\label{sub:hardware-utilization}
+Another approach when 
+Measuring RAM and CPU usage may show the most efficient, fastest, greenest solution.
 
 \subsection{Data ingestion speed}
 \label{sub:ingestion-speed}
@@ -200,25 +222,25 @@ There are multiple ways we can measure all these different possible bottlenecks.
 
 \subsection{Processing speed}
 \label{subs:processing-speed}
-Similar to ingestion speed seen in \ref{sub:ingestion-speed} but measuring the speed at which events are processed internally, not taking into account the ingestion which can be bound to I/O operations.
+Since the ingestion speed discussed in \ref{sub:ingestion-speed} might fluctuate depending on how the data is ingested, measuring the internal processing speed might be more interesting when evaluating the performance of the various solutions. This removes the uncertainties related to ingestion speeds. There are multiple options when looking at internal processing speed. One might look at the processing as a whole from start to finish, or try to separate out the various internal steps that occur during processing. Go features a profiler that will output a graph, showing which functions are taking up the most time during runtime. This can give an idea of where the most of the time is spent during processing.
 
-\begin{itemize}
-    \item Preprocessing
-    \item Processing in general
-\end{itemize}
+The processing speed can be affected by several things. First of all the dataset used will matter, as the number of matches will have an effect on the number of alerts generated and contexts updated.
+Secondly, the implementation of how rules are processed and checked against events can have a big impact on the processing speed. If the solution is able to quickly disregard events as not interesting, there is a big potential for saving time.
+Lastly, the internal handling of contextual information, how that information is accessed and other performance-related improvements all have an effect on the processing speed observed.
+% Drawback
+The biggest drawback of this approach is the need profiling or timing "inside" the solution. While this might be simple to implement in a new solution, patching such a feature into older solutions can prove to be hard or in the worst case error-prone if the solution being patched is not fully understood.
 
 \subsection{Compound processing speed}
 \label{sub:compound-processing-speed}
-Takes into account both ingestion and processing speeds, measures the total time used, including both I/O and any internal processing.
 
-\subsection{Hardware utilization}
-\label{sub:hardware-utilization}
-Measuring RAM and CPU usage may show the most efficient, fastest, greenest solution.
+Measuring the compound processing speed will give us a bird's-eye view of what the total processing speed is. It takes into account both ingestion and processing speeds, measures the total time used, including both I/O and any internal processing.
+
+Depending on the solutions, this might be the best or only option for a good one-to-one comparision between solutions.
 
 
 \section{Test plan}
-As highlighted, there are multiple ways that we can improve or further expand the capabilities of existing real time event correlation solutions. In Section \ref{chap:experiment} we will focus on \ref{sub:use-compiled-language}, \ref{sub:better-rules} and \ref{sub:time-management}. Distributed correlation as discussed in \ref{sub:distributed-correlation} is future work.
-As discussed in \ref{sec:measuring-performance}, there are multiple ways that we can measure the performance of our solution against existing solutions. We will take all of these into when we conduct our experiments.
+As highlighted, there are multiple ways that we can improve or further expand the capabilities of existing real time event correlation solutions. In Chapter \ref{chap:experiment} we will focus on the improvements mentioned in Section \ref{sub:use-compiled-language}, \ref{sub:better-rules} and \ref{sub:time-management}. Distributed correlation, output modularity and support for multiple log formats as discussed in \ref{sub:distributed-correlation}, \ref{sub:modularity}, \ref{sub:multiple-log-formats} is future work.
+As discussed in \ref{sec:measuring-performance}, there are multiple ways that we can measure the performance of our solution against existing solutions. We will primarily be using compound processing speed as discussed in \ref{sub:compound-processing-speed} for our performance tests.
 \iffalse
 \section{The Go programming language}
 

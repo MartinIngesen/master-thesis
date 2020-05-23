@@ -93,8 +93,6 @@ In this chapter the results of both experiments, introduced in Chapter \ref{chap
 \subsection{Results}
 We want to see if our Go implementation can out-perform SEC when handling a high signal, low noise dataset. The Figures \ref{fig:high-signal-low-noise}, \ref{fig:baseline-perf} and \ref{fig:comparing-perf} shows the results for that:
 \\
-
-\\
 These tests are run with 1 logical core on a "Intel(R) Core(TM) i7-7600U CPU @ 2.80GHz" (2 cores x 2 threads per core = max 4 logical cores) and 24GB RAM.\\
 \textbf{What can we say about the performance difference between the two datasets?}\\
 It's because of the implementation in SEC and MEC, if we match a rule quickly, we don't have to check all the other rules for a match, and this saves time.\\
